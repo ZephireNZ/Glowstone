@@ -13,6 +13,7 @@ import org.bukkit.SkullType;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.material.Skull;
 import org.bukkit.util.Vector;
 
@@ -27,8 +28,12 @@ public class BlockSkull extends BlockType {
     @Override
     public void placeBlock(GlowPlayer player, GlowBlockState state, BlockFace face, ItemStack holding, Vector clickedLoc) {
         super.placeBlock(player, state, face, holding, clickedLoc);
-
-        Skull skull = (Skull) state.getData();
+        MaterialData data = state.getData();
+        if(!(data instanceof Skull)) {
+            warnMaterialData(Skull.class, data);
+            return;
+        }
+        Skull skull = (Skull) data;
         skull.setFacingDirection(face);
     }
 

@@ -25,6 +25,7 @@ import net.glowstone.net.message.play.player.PlayerAbilitiesMessage;
 import net.glowstone.net.protocol.ProtocolType;
 import net.glowstone.util.StatisticMap;
 import net.glowstone.util.TextWrapper;
+import net.glowstone.util.nbt.CompoundTag;
 import org.apache.commons.lang.Validate;
 import org.bukkit.*;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
@@ -1313,6 +1314,13 @@ public final class GlowPlayer extends GlowHumanEntity implements Player {
         Validate.isTrue(lines.length == 4, "lines.length must equal 4");
 
         afterBlockChanges.add(UpdateSignMessage.fromPlainText(location.getBlockX(), location.getBlockY(), location.getBlockZ(), lines));
+    }
+
+    public void sendBlockEntityChange(Location location, CompoundTag nbt) throws IllegalArgumentException {
+        Validate.notNull(location, "location cannot be null");
+        Validate.notNull(nbt, "nbt cannot be null");
+
+        afterBlockChanges.add(new UpdateBlockEntityMessage((int) location.getX(), (int) location.getY(), (int) location.getZ(), 3, nbt));
     }
 
     @Override

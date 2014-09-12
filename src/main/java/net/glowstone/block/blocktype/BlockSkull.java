@@ -17,6 +17,7 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.Skull;
 import org.bukkit.util.Vector;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public class BlockSkull extends BlockType {
@@ -75,6 +76,6 @@ public class BlockSkull extends BlockType {
         }
         drop.setDurability((short) skull.getSkullType().ordinal());
 
-        return super.getDrops(block);
+        return Arrays.asList(drop);
     }
 }

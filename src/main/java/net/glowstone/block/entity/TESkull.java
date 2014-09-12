@@ -51,6 +51,7 @@ public class TESkull extends TileEntity {
         tag.putByte("Rot", rotation);
         if(type == GlowSkull.getType(SkullType.PLAYER)) {
             CompoundTag owner = new CompoundTag();
+            //TODO: Fix non-named skull causing NPE
             owner.putString("Id", this.owner.getUniqueId().toString());
             owner.putString("Name", this.owner.getName());
             //TODO: Profile and Properties

@@ -7,6 +7,7 @@ import net.glowstone.block.entity.TESkull;
 import net.glowstone.block.entity.TileEntity;
 import net.glowstone.block.state.GlowSkull;
 import net.glowstone.entity.GlowPlayer;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.block.BlockFace;
@@ -46,8 +47,15 @@ public class BlockSkull extends BlockType {
                 skull.setOwner(meta.getOwner());
             }
         }
+        if(skull.getRawData() == 1) { // Can be rotated
+            // Calculate the rotation based on the player's facing direction
+            Location loc = player.getLocation();
+            // 22.5 = 360 / 16
+            long facing = Math.round(loc.getYaw() / 22.5) + 8;
+            byte rotation = (byte) (((facing % 16) + 16) % 16);
+            skull.setRotation(GlowSkull.getRotation(rotation));
+        }
         skull.update();
-        //TODO: Rotation
     }
 
     @Override

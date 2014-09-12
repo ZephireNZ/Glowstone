@@ -68,7 +68,7 @@ public class TESkull extends TileEntity {
         super.update(player);
         CompoundTag nbt = new CompoundTag();
         saveNbt(nbt);
-        player.sendBlockEntityChange(getBlock().getLocation(), nbt);
+        player.sendSkullChange(getBlock().getLocation(), nbt);
     }
 
     public byte getType() {

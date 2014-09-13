@@ -1,5 +1,7 @@
 package net.glowstone.inventory;
 
+import net.glowstone.block.blocktype.BlockSkull;
+import net.glowstone.entity.meta.PlayerProfile;
 import net.glowstone.util.nbt.CompoundTag;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -8,7 +10,7 @@ import java.util.Map;
 
 public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
 
-    String owner;
+    PlayerProfile owner;
 
     public GlowMetaSkull(GlowMetaItem meta) {
         super(meta);
@@ -46,7 +48,7 @@ public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
     void writeNbt(CompoundTag tag) {
         super.writeNbt(tag);
         if(hasOwner()) {
-            tag.putString("SkullOwner", owner);
+            tag.putString("SkullOwner", getOwner());
         }
     }
 
@@ -54,19 +56,19 @@ public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
     void readNbt(CompoundTag tag) {
         super.readNbt(tag);
         if(tag.containsKey("SkullOwner")) {
-            owner = tag.getString("SkullOwner");
+            setOwner(tag.getString("SkullOwner"));
         }
     }
 
 
 
-////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     // Properties
 
 
     @Override
     public String getOwner() {
-        return owner;
+        return (hasOwner() ? owner.getName() : null);
     }
 
     @Override
@@ -75,7 +77,11 @@ public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
     }
 
     @Override
-    public boolean setOwner(String owner) {
+    public boolean setOwner(String name) {
+        PlayerProfile owner = BlockSkull.getProfile(name);
+        if(owner == null) {
+            return false;
+        }
         this.owner = owner;
         return true;
     }

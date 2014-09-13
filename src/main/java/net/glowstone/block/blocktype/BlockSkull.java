@@ -67,7 +67,6 @@ public class BlockSkull extends BlockType {
             byte rotation = (byte) (((facing % 16) + 16) % 16);
             skull.setRotation(getRotation(rotation));
         }
-        skull.update();
     }
 
     @Override

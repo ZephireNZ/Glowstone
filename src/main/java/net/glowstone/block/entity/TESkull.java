@@ -7,12 +7,10 @@ import net.glowstone.block.blocktype.BlockSkull;
 import net.glowstone.block.state.GlowSkull;
 import net.glowstone.entity.GlowPlayer;
 import net.glowstone.entity.meta.PlayerProfile;
-import net.glowstone.entity.meta.PlayerProperty;
 import net.glowstone.util.nbt.CompoundTag;
 import org.bukkit.Bukkit;
 import org.bukkit.SkullType;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public class TESkull extends TileEntity {
@@ -33,15 +31,7 @@ public class TESkull extends TileEntity {
         rotation = tag.getByte("Rot");
         if(tag.containsKey("Owner")) {
             CompoundTag ownerTag = tag.getCompound("Owner");
-
-            String uuidStr = ownerTag.getString("Id");
-            String name = ownerTag.getString("Name");
-
-            owner = new PlayerProfile(name, UUID.fromString(uuidStr));
-            // NBT: {Properties: {textures: [{Signature: "", Value: {}}]}}
-            CompoundTag texturesTag = ownerTag.getCompound("Properties").getCompoundList("textures").get(0);
-            PlayerProperty textures = new PlayerProperty("textures", texturesTag.getString("Value"), texturesTag.getString("Signature"));
-            owner.getProperties().add(textures);
+            owner = PlayerProfile.fromNBT(ownerTag);
         } else if(tag.containsKey("ExtraType")) {
             // Pre-1.8 uses just a name, instead of a profile object
             String name = tag.getString("ExtraType");
@@ -58,21 +48,7 @@ public class TESkull extends TileEntity {
         tag.putByte("SkullType", type);
         tag.putByte("Rot", rotation);
         if(type == BlockSkull.getType(SkullType.PLAYER) && owner != null) {
-            CompoundTag ownerTag = new CompoundTag();
-            ownerTag.putString("Id", this.owner.getUniqueId().toString());
-            ownerTag.putString("Name", this.owner.getName());
-
-            CompoundTag propertiesTag = new CompoundTag();
-            for(PlayerProperty property : owner.getProperties()) {
-                CompoundTag propertyValueTag = new CompoundTag();
-                propertyValueTag.putString("Signature", property.getSignature());
-                propertyValueTag.putString("Value", property.getValue());
-
-                propertiesTag.putCompoundList(property.getName(), Arrays.asList(propertyValueTag));
-            }
-            if(!propertiesTag.isEmpty()) { // Only add properties if not empty
-                ownerTag.putCompound("Properties", propertiesTag);
-            }
+            tag.putCompound("Owner", owner.toNBT());
         }
     }
 

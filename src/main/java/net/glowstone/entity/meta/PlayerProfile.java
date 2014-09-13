@@ -1,10 +1,10 @@
 package net.glowstone.entity.meta;
 
+import net.glowstone.util.nbt.CompoundTag;
+import net.glowstone.util.nbt.Tag;
 import org.apache.commons.lang.Validate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Information about a player's name, UUID, and other properties.
@@ -70,6 +70,41 @@ public final class PlayerProfile {
                 ", uuid=" + uuid +
                 ", " + properties.size() + " properties" +
                 '}';
+    }
+
+    public CompoundTag toNBT() {
+        CompoundTag profileTag = new CompoundTag();
+        profileTag.putString("Id", uuid.toString());
+        profileTag.putString("Name", name);
+
+        CompoundTag propertiesTag = new CompoundTag();
+        for(PlayerProperty property : properties) {
+            CompoundTag propertyValueTag = new CompoundTag();
+            propertyValueTag.putString("Signature", property.getSignature());
+            propertyValueTag.putString("Value", property.getValue());
+
+            propertiesTag.putCompoundList(property.getName(), Arrays.asList(propertyValueTag));
+        }
+        if(!propertiesTag.isEmpty()) { // Only add properties if not empty
+            profileTag.putCompound("Properties", propertiesTag);
+        }
+        return profileTag;
+    }
+
+    public static PlayerProfile fromNBT(CompoundTag tag) {
+        // NBT: {Id: "", Name: "", Properties: {textures: [{Signature: "", Value: {}}]}}
+        String uuidStr = tag.getString("Id");
+        String name = tag.getString("Name");
+
+        PlayerProfile owner = new PlayerProfile(name, UUID.fromString(uuidStr));
+        if(tag.containsKey("Properties")) {
+            for(Map.Entry<String, Tag> property : tag.getCompound("Properties").getValue().entrySet()) {
+                Tag propertyTag = property.getValue();
+                CompoundTag propertyValueTag = ((List<CompoundTag>) property.getValue().getValue()).get(0);
+                new PlayerProperty(property.getKey(), propertyValueTag.getString("Value"), propertyValueTag.getString("Signature"));
+            }
+        }
+        return owner;
     }
 
     public boolean equals(Object o) {

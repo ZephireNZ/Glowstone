@@ -49,6 +49,7 @@ public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
         super.writeNbt(tag);
         if(hasOwner()) {
             tag.putString("SkullOwner", getOwner());
+            //TODO: Full profile implementation
         }
     }
 
@@ -57,6 +58,7 @@ public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
         super.readNbt(tag);
         if(tag.containsKey("SkullOwner")) {
             setOwner(tag.getString("SkullOwner"));
+            //TODO: Full profile implementation
         }
     }
 

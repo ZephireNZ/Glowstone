@@ -59,7 +59,14 @@ public class BlockSkull extends BlockType {
                 skull.setOwner(meta.getOwner());
             }
         }
-        if(skull.getRawData() == 1) { // Can be rotated
+        MaterialData data = skull.getData();
+        if(!(data instanceof Skull)) {
+            warnMaterialData(Skull.class, data);
+            return;
+        }
+        Skull skullData = (Skull) data;
+
+        if(skullData.getFacing() == BlockFace.SELF) { // Can be rotated
             // Calculate the rotation based on the player's facing direction
             Location loc = player.getLocation();
             // 22.5 = 360 / 16

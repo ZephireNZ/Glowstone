@@ -184,4 +184,7 @@ public class BlockSkull extends BlockType {
         return (byte) type.ordinal();
     }
 
+    public static boolean canRotate(Skull skull) {
+        return skull.getFacing() == BlockFace.SELF;
+    }
 }

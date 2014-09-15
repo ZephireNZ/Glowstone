@@ -7,10 +7,9 @@ import net.glowstone.block.entity.TESkull;
 import net.glowstone.entity.meta.PlayerProfile;
 import org.bukkit.SkullType;
 import org.bukkit.block.BlockFace;
-import org.bukkit.material.Skull;
+import org.bukkit.block.Skull;
 
-// Yes, this is ugly, but this Skull class is only used once, while the Material Skull is used a lot
-public class GlowSkull extends GlowBlockState implements org.bukkit.block.Skull {
+public class GlowSkull extends GlowBlockState implements Skull {
 
     private SkullType type;
     private PlayerProfile owner;
@@ -33,7 +32,7 @@ public class GlowSkull extends GlowBlockState implements org.bukkit.block.Skull 
         if(result) {
             TESkull skull = getTileEntity();
             skull.setType(BlockSkull.getType(type));
-            if (canRotate((Skull) (getBlock().getState().getData()))) {
+            if (BlockSkull.canRotate((org.bukkit.material.Skull) (getBlock().getState().getData()))) {
                 skull.setRotation(BlockSkull.getRotation(rotation));
             }
             if(type == SkullType.PLAYER) {
@@ -42,10 +41,6 @@ public class GlowSkull extends GlowBlockState implements org.bukkit.block.Skull 
             getTileEntity().updateInRange();
         }
         return result;
-    }
-
-    public static boolean canRotate(Skull skull) {
-        return skull.getFacing() == BlockFace.SELF;
     }
 
     @Override

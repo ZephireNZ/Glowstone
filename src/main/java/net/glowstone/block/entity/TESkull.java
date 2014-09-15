@@ -9,8 +9,8 @@ import net.glowstone.entity.GlowPlayer;
 import net.glowstone.entity.meta.PlayerProfile;
 import net.glowstone.util.nbt.CompoundTag;
 import org.bukkit.Bukkit;
-import org.bukkit.material.Skull;
 import org.bukkit.SkullType;
+import org.bukkit.material.Skull;
 
 import java.util.UUID;
 
@@ -47,7 +47,7 @@ public class TESkull extends TileEntity {
     public void saveNbt(CompoundTag tag) {
         super.saveNbt(tag);
         tag.putByte("SkullType", type);
-        if (GlowSkull.canRotate((Skull) getBlock().getState().getData())) {
+        if (BlockSkull.canRotate((Skull) getBlock().getState().getData())) {
             tag.putByte("Rot", rotation);
         }
         if(type == BlockSkull.getType(SkullType.PLAYER) && owner != null) {

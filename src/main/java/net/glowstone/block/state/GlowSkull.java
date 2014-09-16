@@ -4,7 +4,7 @@ import net.glowstone.block.GlowBlock;
 import net.glowstone.block.GlowBlockState;
 import net.glowstone.block.blocktype.BlockSkull;
 import net.glowstone.block.entity.TESkull;
-import net.glowstone.entity.meta.PlayerProfile;
+import net.glowstone.entity.meta.profile.PlayerProfile;
 import org.bukkit.SkullType;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;

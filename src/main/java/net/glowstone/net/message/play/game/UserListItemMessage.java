@@ -1,7 +1,7 @@
 package net.glowstone.net.message.play.game;
 
 import com.flowpowered.networking.Message;
-import net.glowstone.entity.meta.PlayerProfile;
+import net.glowstone.entity.meta.profile.PlayerProfile;
 import org.json.simple.JSONObject;
 
 import java.util.Arrays;

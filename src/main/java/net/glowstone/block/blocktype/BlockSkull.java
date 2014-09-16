@@ -8,7 +8,8 @@ import net.glowstone.block.entity.TESkull;
 import net.glowstone.block.entity.TileEntity;
 import net.glowstone.block.state.GlowSkull;
 import net.glowstone.entity.GlowPlayer;
-import net.glowstone.entity.meta.PlayerProfile;
+import net.glowstone.entity.meta.profile.PlayerDataFetcher;
+import net.glowstone.entity.meta.profile.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -95,8 +96,11 @@ public class BlockSkull extends BlockType {
     public static PlayerProfile getProfile(String name) {
         if(name == null || name.length() > MAX_OWNER_LENGTH || name.isEmpty()) return null;
 
-        UUID uuid = ((GlowServer) Bukkit.getServer()).getPlayerDataService().lookupUUID(name);
-        return new PlayerProfile(name, uuid);
+        //UUID uuid = ((GlowServer) Bukkit.getServer()).getPlayerDataService().lookupUUID(name);
+        //return new PlayerProfile(name, uuid);
+        //
+        UUID uuid = PlayerDataFetcher.getUUID(name);
+        return PlayerDataFetcher.getProfile(uuid);
     }
 
     public static BlockFace getRotation(byte rotation) {

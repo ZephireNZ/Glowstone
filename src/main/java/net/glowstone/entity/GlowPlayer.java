@@ -10,7 +10,7 @@ import net.glowstone.constants.GlowEffect;
 import net.glowstone.constants.GlowSound;
 import net.glowstone.entity.meta.MetadataIndex;
 import net.glowstone.entity.meta.MetadataMap;
-import net.glowstone.entity.meta.PlayerProfile;
+import net.glowstone.entity.meta.profile.PlayerProfile;
 import net.glowstone.inventory.InventoryMonitor;
 import net.glowstone.io.PlayerDataService;
 import net.glowstone.net.GlowSession;

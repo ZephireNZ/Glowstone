@@ -6,7 +6,7 @@ import net.glowstone.block.GlowBlockState;
 import net.glowstone.block.blocktype.BlockSkull;
 import net.glowstone.block.state.GlowSkull;
 import net.glowstone.entity.GlowPlayer;
-import net.glowstone.entity.meta.PlayerProfile;
+import net.glowstone.entity.meta.profile.PlayerProfile;
 import net.glowstone.util.nbt.CompoundTag;
 import org.bukkit.Bukkit;
 import org.bukkit.SkullType;

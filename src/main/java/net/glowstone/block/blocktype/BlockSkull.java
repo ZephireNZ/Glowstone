@@ -54,9 +54,12 @@ public class BlockSkull extends BlockType {
     public void afterPlace(GlowPlayer player, GlowBlock block, ItemStack holding) {
         GlowSkull skull = (GlowSkull) block.getState();
         skull.setSkullType(getType(holding.getDurability()));
+        System.out.println("Type: " + skull.getSkullType());
         if(skull.getSkullType() == SkullType.PLAYER) {
+            System.out.println("Player");
             SkullMeta meta = (SkullMeta) holding.getItemMeta();
             if(meta != null) {
+                System.out.println("Setting owner: " + meta);
                 skull.setOwner(meta.getOwner());
             }
         }
@@ -99,7 +102,9 @@ public class BlockSkull extends BlockType {
         //UUID uuid = ((GlowServer) Bukkit.getServer()).getPlayerDataService().lookupUUID(name);
         //return new PlayerProfile(name, uuid);
         //
+        System.out.println("Getting profile in BlockSkull");
         UUID uuid = PlayerDataFetcher.getUUID(name);
+        System.out.println("Got UUID: " + uuid);
         return PlayerDataFetcher.getProfile(uuid);
     }
 

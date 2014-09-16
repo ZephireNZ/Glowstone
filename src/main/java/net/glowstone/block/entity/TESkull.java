@@ -29,7 +29,10 @@ public class TESkull extends TileEntity {
     public void loadNbt(CompoundTag tag) {
         super.loadNbt(tag);
         type = tag.getByte("SkullType");
-        rotation = tag.getByte("Rot");
+
+        if (BlockSkull.canRotate((Skull) getBlock().getState().getData())) {
+            rotation = tag.getByte("Rot");
+        }
         if(tag.containsKey("Owner")) {
             CompoundTag ownerTag = tag.getCompound("Owner");
             owner = PlayerProfile.fromNBT(ownerTag);
@@ -51,6 +54,7 @@ public class TESkull extends TileEntity {
             tag.putByte("Rot", rotation);
         }
         if(type == BlockSkull.getType(SkullType.PLAYER) && owner != null) {
+            System.out.println("TE Owner");
             tag.putCompound("Owner", owner.toNBT());
         }
     }

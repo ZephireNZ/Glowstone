@@ -40,9 +40,21 @@ public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = super.serialize();
+        System.out.println("Serializing");
         result.put("meta-type", "SKULL");
         if(hasOwner()) {
+            System.out.println("Serializing owner");
             result.put("owner", owner);
+        }
+        return result;
+    }
+
+    public static GlowMetaSkull deserialize(Map<String, Object> data) {
+        GlowMetaSkull result = new GlowMetaSkull(null);
+        System.out.println("Deserializing");
+        if (data.containsKey("owner")) {
+            System.out.println("Owner!");
+            result.owner = (PlayerProfile) data.get("owner");
         }
         return result;
     }
@@ -88,11 +100,14 @@ public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
 
     @Override
     public boolean setOwner(String name) {
+        System.out.println("Meta owner");
         PlayerProfile owner = BlockSkull.getProfile(name);
         if(owner == null) {
+            System.out.println("Null");
             return false;
         }
         this.owner = owner;
+        System.out.println("Owner: " + owner);
         return true;
     }
 }

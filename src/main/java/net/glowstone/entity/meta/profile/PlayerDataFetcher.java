@@ -1,12 +1,21 @@
 package net.glowstone.entity.meta.profile;
 
+import net.glowstone.GlowServer;
+import net.glowstone.util.UuidUtils;
+
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.io.IOException;
+import javax.net.ssl.HttpsURLConnection;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.DataOutputStream;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONValue;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -20,50 +29,70 @@ public class PlayerDataFetcher {
     private static final String UUID_URL = "https://api.mojang.com/profiles/minecraft";
 
     public static PlayerProfile getProfile(UUID uuid) {
-        URL url = new URL(PROFILE_URL + uuid + PROFILE_URL_PREFIX);
-        URLConnection conn = url.openConnection();
-        InputStream is = conn.getInputStream();
+        InputStream is;
         try {
-            JSONObject json = new JSONParser().parse(new InputStreamReader(is));
-        } catch (ParseException e) {
-            GlowServer.logger.warning("Couldn't get profile for UUID " + uuid);
-            return;
+            URL url = new URL(PROFILE_URL + UuidUtils.toFlatString(uuid) + PROFILE_URL_PREFIX);
+            URLConnection conn = url.openConnection();
+            is = conn.getInputStream();
+        } catch (MalformedURLException e) {
+            GlowServer.logger.severe("Couldn't get profile - something is wrong with the URL: " + e.toString());
+            return null;
+        } catch (IOException e) {
+            GlowServer.logger.warning("Could't get profile - " + e.toString());
+            return null;
         }
 
+        JSONObject json;
+        try {
+            json = (JSONObject) new JSONParser().parse(new InputStreamReader(is));
+        } catch (ParseException e) {
+            GlowServer.logger.warning("Couldn't get profile for UUID " + uuid + " : " + e.toString());
+            return null;
+        } catch (IOException e) {
+            GlowServer.logger.warning("Couldn't get profile due to IO error: " + e.toString());
+            return null;
+        }
         PlayerProfile profile = PlayerProfile.parseProfile(json);
         return profile;
     }
 
     public static UUID getUUID(String playerName) {
-        URL url = new URL(UUID_URL);
-        HTTPSURLConnection conn = (HTTPSUrlConnection) url.openConnection();
-        conn.setDoOutput(true);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json");
+        HttpsURLConnection conn;
+        try {
+            URL url = new URL(UUID_URL);
+            conn = (HttpsURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+        } catch (MalformedURLException e) {
+            GlowServer.logger.severe("Couldn't get UUID - something is wrong with the URL: " + e.toString());
+            return null;
+        } catch (IOException e) {
+            GlowServer.logger.warning("Couldn't get UUID due to IO error: " + e.toString());
+            return null;
+        }
 
         List<String> playerList = new ArrayList<String>();
         playerList.add(playerName);
 
-        OutputStream os = conn.getOutputStream();
-        os.write(new JSONArray(playerList.toArray()));
-        os.flush();
-        os.close();
+        JSONArray json;
 
-
-        InputStream is = conn.getInputStream();
         try {
-            JSONObject json = new JSONParser().parse(new InputStreamReader(is));
-        } catch (ParseException e) {
-            GlowServer.logger.warning("Couldn't get profile for UUID " + uuid);
-            return;
-        }
+            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+            os.writeBytes(JSONValue.toJSONString(playerList));
+            os.flush();
+            os.close();
 
+            json = (JSONArray) JSONValue.parse(new InputStreamReader(conn.getInputStream()));
+        } catch (IOException e) {
+            GlowServer.logger.warning("Couldn't get UUID due to IO error: " + e.toString());
+            return null;
+        }
         return parseUUIDResponse(json);
     }
 
-    public static UUID parseUUIDResponse(JSONObject json) {
-        JSONArray uuids = (JSONArray) json;
-        String uuid = uuids.get(0).get("id");
+    public static UUID parseUUIDResponse(JSONArray json) {
+        String uuid = (String) ((JSONObject) json.get(0)).get("id");
         return UuidUtils.fromFlatString(uuid);    
     }
 }

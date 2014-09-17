@@ -40,10 +40,8 @@ public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = super.serialize();
-        System.out.println("Serializing");
         result.put("meta-type", "SKULL");
         if(hasOwner()) {
-            System.out.println("Serializing owner");
             result.put("owner", owner);
         }
         return result;

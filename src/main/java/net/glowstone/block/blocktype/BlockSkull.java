@@ -10,6 +10,7 @@ import net.glowstone.block.state.GlowSkull;
 import net.glowstone.entity.GlowPlayer;
 import net.glowstone.entity.meta.profile.PlayerDataFetcher;
 import net.glowstone.entity.meta.profile.PlayerProfile;
+import net.glowstone.entity.meta.profile.ProfileCache;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -103,9 +104,11 @@ public class BlockSkull extends BlockType {
         //return new PlayerProfile(name, uuid);
         //
         System.out.println("Getting profile in BlockSkull");
-        UUID uuid = PlayerDataFetcher.getUUID(name);
+        //UUID uuid = PlayerDataFetcher.getUUID(name);
+        UUID uuid = ProfileCache.getUUID(name);
         System.out.println("Got UUID: " + uuid);
-        return PlayerDataFetcher.getProfile(uuid);
+        return ProfileCache.getProfile(uuid);
+        //return PlayerDataFetcher.getProfile(uuid);
     }
 
     public static BlockFace getRotation(byte rotation) {

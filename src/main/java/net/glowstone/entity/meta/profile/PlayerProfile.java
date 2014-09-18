@@ -102,14 +102,15 @@ public final class PlayerProfile {
         String uuidStr = tag.getString("Id");
         String name = tag.getString("Name");
 
-        PlayerProfile owner = new PlayerProfile(name, UUID.fromString(uuidStr));
+        List<PlayerProperty> properties = new ArrayList<PlayerProperty>();
         if(tag.containsKey("Properties")) {
             for(Map.Entry<String, Tag> property : tag.getCompound("Properties").getValue().entrySet()) {
                 Tag propertyTag = property.getValue();
                 CompoundTag propertyValueTag = ((List<CompoundTag>) property.getValue().getValue()).get(0);
-                new PlayerProperty(property.getKey(), propertyValueTag.getString("Value"), propertyValueTag.getString("Signature"));
+                properties.add(new PlayerProperty(property.getKey(), propertyValueTag.getString("Value"), propertyValueTag.getString("Signature")));
             }
         }
+        PlayerProfile owner = new PlayerProfile(name, UUID.fromString(uuidStr), properties);
         return owner;
     }
 

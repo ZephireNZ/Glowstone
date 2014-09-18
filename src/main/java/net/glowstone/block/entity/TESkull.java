@@ -54,7 +54,6 @@ public class TESkull extends TileEntity {
             tag.putByte("Rot", rotation);
         }
         if(type == BlockSkull.getType(SkullType.PLAYER) && owner != null) {
-            System.out.println("TE Owner");
             tag.putCompound("Owner", owner.toNBT());
         }
     }

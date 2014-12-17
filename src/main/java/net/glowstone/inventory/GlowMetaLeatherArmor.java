@@ -4,10 +4,12 @@ import net.glowstone.util.nbt.CompoundTag;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Map;
 
+@DelegateDeserialization(GlowMetaItem.class)
 public class GlowMetaLeatherArmor extends GlowMetaItem implements LeatherArmorMeta {
 
     private Color color = GlowItemFactory.instance().getDefaultLeatherColor();

@@ -5,12 +5,14 @@ import net.glowstone.util.nbt.CompoundTag;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@DelegateDeserialization(GlowMetaItem.class)
 public class GlowMetaFireworkEffect extends GlowMetaItem implements FireworkEffectMeta {
 
     private FireworkEffect effect;

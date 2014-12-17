@@ -7,6 +7,7 @@ import net.glowstone.util.nbt.TagType;
 import org.apache.commons.lang.Validate;
 import org.bukkit.BannerPattern;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@DelegateDeserialization(GlowMetaItem.class)
 public class GlowMetaBanner extends GlowMetaItem implements BannerMeta {
 
     private BannerPattern pattern = BannerPattern.builder().build();
@@ -25,6 +27,12 @@ public class GlowMetaBanner extends GlowMetaItem implements BannerMeta {
         }
         GlowMetaBanner banner = (GlowMetaBanner) meta;
         this.pattern = banner.pattern;
+    }
+
+    public GlowMetaBanner(Map<String, Object> map) {
+        super(map);
+
+        //TODO: Implement deserialization
     }
 
     @Override

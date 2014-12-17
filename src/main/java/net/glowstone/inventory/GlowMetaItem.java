@@ -1,9 +1,12 @@
 package net.glowstone.inventory;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import net.glowstone.util.nbt.CompoundTag;
 import net.glowstone.util.nbt.TagType;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -12,6 +15,7 @@ import java.util.*;
 /**
  * An implementation of {@link ItemMeta}, created through {@link GlowItemFactory}.
  */
+@DelegateDeserialization(GlowMetaItem.class)
 class GlowMetaItem implements ItemMeta {
 
     private String displayName;
@@ -35,6 +39,15 @@ class GlowMetaItem implements ItemMeta {
         if (meta.hasEnchants()) {
             this.enchants = new HashMap<>(meta.enchants);
         }
+    }
+
+    /**
+     * Constructor for deserialization using {@link org.bukkit.configuration.serialization.ConfigurationSerializable}.
+     * @param map Map of deserialized values
+     */
+    public GlowMetaItem(Map<String, Object> map) {
+        displayName = getObject(String.class, map, "display-name", true);
+        lore = getList(String.class, map, "lore", true);
     }
 
     /**
@@ -95,6 +108,46 @@ class GlowMetaItem implements ItemMeta {
         }
 
         // todo: enchantments
+    }
+
+    /**
+     * Gets an object from the map specified, with the given class type.
+     * @param clazz Type to use
+     * @param map Map to get the object from
+     * @param key Key of object in map
+     * @param nullable Whether the object is allowed to be null
+     * @param <T> Type to return
+     * @return The object from the map, if it exists
+     * @throws java.util.NoSuchElementException if key does not exist in map, and nullable is false
+     * @throws java.lang.IllegalArgumentException if object is not an instance of return type
+     */
+    protected static <T> T getObject(Class<T> clazz, Map<String, Object> map, String key, boolean nullable) {
+        Object obj = map.get(key);
+
+        if (clazz.isInstance(obj)) {
+            return clazz.cast(obj);
+        }
+        if (obj == null) {
+            if (!nullable) {
+                throw new NoSuchElementException("Deserialization does not contain " + key);
+            }
+            return null;
+        }
+        throw new IllegalArgumentException(key + " is not an instance of " + clazz);
+    }
+
+    /**
+     * Gets a list of a given generic type from the map specified.
+     * @param clazz Generic type of the list
+     * @param map Map to get list from
+     * @param key Key of list in map
+     * @param nullable Whether the list can be null
+     * @param <T> Generic type to return
+     * @return A list from the map, if it exists
+     */
+    protected static <T> List<T> getList(Class<T> clazz, Map<String, Object> map, String key, boolean nullable) {
+        List untyped = getObject(List.class, map, key, nullable);
+        return Lists.newArrayList(Iterables.filter(untyped, clazz)); // Use guava to filter incorrect types
     }
 
     @Override

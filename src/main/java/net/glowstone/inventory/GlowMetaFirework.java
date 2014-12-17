@@ -6,6 +6,7 @@ import net.glowstone.util.nbt.CompoundTag;
 import org.apache.commons.lang.Validate;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@DelegateDeserialization(GlowMetaItem.class)
 public class GlowMetaFirework extends GlowMetaItem implements FireworkMeta {
 
     private List<FireworkEffect> effects = new ArrayList<>();
@@ -25,6 +27,14 @@ public class GlowMetaFirework extends GlowMetaItem implements FireworkMeta {
         GlowMetaFirework firework = (GlowMetaFirework) meta;
         effects.addAll(firework.effects);
         power = firework.power;
+    }
+
+    public GlowMetaFirework(Map<String, Object> map) {
+        super(map);
+
+        power = getObject(Integer.class, map, "power", false);
+        List<FireworkEffect> effects = getList(FireworkEffect.class, map, "effects", true);
+        if (effects != null) this.effects = effects;
     }
 
     @Override
@@ -45,10 +55,6 @@ public class GlowMetaFirework extends GlowMetaItem implements FireworkMeta {
         result.put("power", power);
 
         if (hasEffects()) {
-            List<Object> effects = new ArrayList<>();
-            for (FireworkEffect effect : this.effects) {
-                effects.add(effect.serialize());
-            }
             result.put("effects", effects);
         }
 

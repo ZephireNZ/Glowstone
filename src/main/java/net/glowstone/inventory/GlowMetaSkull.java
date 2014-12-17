@@ -3,10 +3,12 @@ package net.glowstone.inventory;
 import net.glowstone.entity.meta.profile.PlayerProfile;
 import net.glowstone.util.nbt.CompoundTag;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Map;
 
+@DelegateDeserialization(GlowMetaItem.class)
 public class GlowMetaSkull extends GlowMetaItem implements SkullMeta {
 
     PlayerProfile owner;

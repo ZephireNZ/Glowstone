@@ -3,6 +3,8 @@ package net.glowstone.inventory;
 import net.glowstone.util.nbt.CompoundTag;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,6 +18,13 @@ public final class GlowItemFactory implements ItemFactory {
     private static final Color LEATHER_COLOR = Color.fromRGB(0xA06540);
 
     private GlowItemFactory() {
+        reg(GlowMetaBanner.class);
+        reg(GlowMetaBook.class);
+        reg(GlowMetaFirework.class);
+        reg(GlowMetaFireworkEffect.class);
+        reg(GlowMetaItem.class);
+        reg(GlowMetaLeatherArmor.class);
+        reg(GlowMetaSkull.class);
     }
 
     @Override
@@ -39,12 +48,12 @@ public final class GlowItemFactory implements ItemFactory {
         // and the extra new objects for null arguments
         GlowMetaItem glow1, glow2;
         if (meta1 == null) {
-            glow1 = new GlowMetaItem(null);
+            glow1 = new GlowMetaItem((GlowMetaItem) null);
         } else {
             glow1 = toGlowMeta(meta1);
         }
         if (meta2 == null) {
-            glow2 = new GlowMetaItem(null);
+            glow2 = new GlowMetaItem((GlowMetaItem) null);
         } else {
             glow2 = toGlowMeta(meta2);
         }
@@ -127,5 +136,9 @@ public final class GlowItemFactory implements ItemFactory {
             default:
                 return new GlowMetaItem(meta);
         }
+    }
+
+    private void reg(Class<? extends ConfigurationSerializable> clazz) {
+        ConfigurationSerialization.registerClass(clazz);
     }
 }
